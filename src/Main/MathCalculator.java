@@ -101,7 +101,7 @@ public class MathCalculator extends JPanel{
         });
     }
     
-    int fontSize = p.getFontSize(45);
+    int fontSize = p.getFontSize(40);
     int increment = p.convertScreenY(76);
     public final void addField(){
         int index = isFocusOwner+1;

@@ -7,12 +7,13 @@ package Input;
 
 import Main.Main;
 import Main.p;
-import Math_Evaluation_Library.GraphingTechnology.GraphingCalculator;
+import Math_Evaluation_Library.Constants.GreekLetters;
+import Math_Evaluation_Library.Constants.StringReplacements;
+//import Math_Evaluation_Library.GraphingTechnology.GraphingCalculator;
 import Math_Evaluation_Library.Engine.Engine;
 import Math_Evaluation_Library.Miscellaneous.MathRound;
 import Math_Evaluation_Library.Miscellaneous.Simplify;
 import Math_Evaluation_Library.Objects.Fraction;
-import Math_Evaluation_Library.Objects.Function;
 import Math_Evaluation_Library.Objects._Number_;
 import java.awt.Desktop;
 import java.awt.event.KeyEvent;
@@ -35,7 +36,7 @@ public class KeyBoard implements KeyListener{
     JTextField output;
     String previous = "";
     boolean pressed = true;
-    String[] enter_compute = {"nint", "slopeF", "sf", "df", "dict", "thes"};
+    String[] enter_compute = {"slopeF", "sf", "df", "dict", "thes"};
     
     public KeyBoard(JTextField field, JTextField area){
         input = field;
@@ -85,7 +86,7 @@ public class KeyBoard implements KeyListener{
                 } catch (IOException ex) {} catch (URISyntaxException ex) {}
             }
         }
-        else if (ke.isControlDown() && input.getText().trim().contains("random")){
+        else if (ke.isControlDown() && input.getText().trim().contains("rand")){
             compute(input, output);
         }
         else
@@ -131,12 +132,47 @@ public class KeyBoard implements KeyListener{
             }
         }
         else if ((keyCode == KeyEvent.VK_9  || keyCode == KeyEvent.VK_0) && ke.isControlDown()){
-            input.setText("("+string+")");
-            if (keyCode == KeyEvent.VK_9){
-                input.setCaretPosition(0);
+            if (input.getSelectedText() != null){
+                int start = input.getSelectionStart();
+                int end = input.getSelectionEnd();
+                input.setText(string.substring(0, start)+"("+string.substring(start, end)+")"+string.substring(end));
+                if (keyCode == KeyEvent.VK_9){
+                    input.setCaretPosition(start);
+                }
+                else if (keyCode == KeyEvent.VK_0){
+                    input.setCaretPosition(end+2);
+                }
             }
-            else if (keyCode == KeyEvent.VK_0){
-                input.setCaretPosition(input.getText().length());
+            else{
+                input.setText("("+string+")");
+                if (keyCode == KeyEvent.VK_9){
+                    input.setCaretPosition(0);
+                }
+                else if (keyCode == KeyEvent.VK_0){
+                    input.setCaretPosition(input.getText().length());
+                }
+            }
+        }
+        else if ((keyCode == KeyEvent.VK_OPEN_BRACKET || keyCode == KeyEvent.VK_CLOSE_BRACKET) && ke.isControlDown()){
+            if (input.getSelectedText() != null){
+                int start = input.getSelectionStart();
+                int end = input.getSelectionEnd();
+                input.setText(string.substring(0, start)+"{"+string.substring(start, end)+"}"+string.substring(end));
+                if (keyCode == KeyEvent.VK_9){
+                    input.setCaretPosition(start);
+                }
+                else if (keyCode == KeyEvent.VK_0){
+                    input.setCaretPosition(end+2);
+                }
+            }
+            else{
+                input.setText("{"+string+"}");
+                if (keyCode == KeyEvent.VK_9){
+                    input.setCaretPosition(0);
+                }
+                else if (keyCode == KeyEvent.VK_0){
+                    input.setCaretPosition(input.getText().length());
+                }
             }
         }
         else if (!string.equals(previous)){
@@ -146,28 +182,25 @@ public class KeyBoard implements KeyListener{
         }
     }
     
-    public static final String pi = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117";
-    public static final String e = "2.718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525";
-    public static final String gr = "1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072";
-    public static final String sqrt2 = "1.41421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764";
-    public static final String euler_macheroni = "0.577215664901532860606512090082402431042159335939923598805767234884867726777664670936947063291";
+//    public static String[] greekAlphaString = {"alpha", "beta", "gamma", "delta", "kappa", "tau", "theta", "rho", "phi", "psi", "sigma", "mu", "lambda", "omega", "pi", "iota"};
+//    public static String[] greekAlpha =       {"α",     "β",    "γ",     "δ",     "κ",     "τ",   "θ",     "ρ",   "ϕ",   "ψ",   "σ",     "μ",  "λ",      "ω",     "π",  "ι"};
+//    public static String[] greekCapitalAlphaString = {"Alpha", "Beta", "Gamma", "Delta", "Kappa", "Tau", "Theta", "Rho", "Phi", "Psi", "Sigma", "Mu", "Lambda", "Omega", "Pi", "Iota"};
+//    public static String[] greekCapitalAlpha =       {"Α",     "Β",    "Γ",     "Δ",     "Κ",     "Τ",   "Θ",     "Ρ",   "Φ",   "Ψ",   "Σ",     "Μ",  "Λ",      "Ω",     "Π",  "Ι"};
+    public static final String[] reserved = {"π", "ϕ", "γ", "Ι", "ι", "η"};
     
-    public static String[] greekAlphaString = {"alpha", "beta", "gamma", "delta", "kappa", "tau", "theta", "rho", "phi", "psi", "sigma", "mu", "lambda", "omega", "pi", "iota"};
-    public static String[] greekAlpha =       {"α",     "β",    "γ",     "δ",     "κ",     "τ",   "θ",     "ρ",   "ϕ",   "ψ",   "σ",     "μ",  "λ",      "ω",     "π",  "ι"};
-    public static String[] greekCapitalAlphaString = {"Alpha", "Beta", "Gamma", "Delta", "Kappa", "Tau", "Theta", "Rho", "Phi", "Psi", "Sigma", "Mu", "Lambda", "Omega", "Pi", "Iota"};
-    public static String[] greekCapitalAlpha =       {"Α",     "Β",    "Γ",     "Δ",     "Κ",     "Τ",   "Θ",     "Ρ",   "Φ",   "Ψ",   "Σ",     "Μ",  "Λ",      "Ω",     "Π",  "Ι"};
-    public static final String[] reserved = {"π", "ϕ", "Σ", "Π", "γ", "Ι", "ι", "η"};
     
     public void keyAction(JTextField input, JTextField output) {
         String string = input.getText().trim();
-        List<String> replaceable = new ArrayList<>(Arrays.asList("sqrt", "\\.", "\\dot", "^deg", "^o", "^O", "〖", "〗", "⁡", "_r", "^r", "sum", "product", "gr", "E_M", "->"));
-        List<String> replaceWith = new ArrayList<>(Arrays.asList("√"   , "·",    "·",     "°",   "°",  "°",  "(",  ")", "",  "ʳ",  "ʳ",  "Σ",   "Π",       "ϕ",  "γ",   "→"));
-        replaceable.addAll(Arrays.asList(greekAlphaString));
-        replaceWith.addAll(Arrays.asList(greekAlpha));
-        replaceable.addAll(Arrays.asList(greekCapitalAlphaString));
-        replaceWith.addAll(Arrays.asList(greekCapitalAlpha));
-        replaceable.add("ϕaph");
-        replaceWith.add("graph");
+        List<String> replaceable = new ArrayList<>();
+        List<String> replaceWith = new ArrayList<>();
+        for (String[] replaceStrs : StringReplacements.dynamicInputReplacement){
+            replaceable.add(replaceStrs[0]);
+            replaceWith.add(replaceStrs[1]);
+        }
+        for (String[] pair : GreekLetters.greekLetterPairs){
+            replaceable.add(pair[0]);
+            replaceWith.add(pair[1]);
+        }
         if (string.contains("x")){
             replaceable.addAll(Arrays.asList("**"));
             replaceWith.addAll(Arrays.asList("^"));
@@ -193,26 +226,6 @@ public class KeyBoard implements KeyListener{
         }
         if (string.trim().equals("")){
             output.setText("");
-        }
-        else if (string.trim().equals("π")){
-            output.setText("≈ "+pi);
-            output.setCaretPosition(0);
-        }
-        else if (string.trim().equals("e")){
-            output.setText("≈ "+e);
-            output.setCaretPosition(0);
-        }
-        else if (string.trim().equals("ϕ")){
-            output.setText("≈ "+gr);
-            output.setCaretPosition(0);
-        }
-        else if (string.trim().equals("√2")){
-            output.setText("≈ "+sqrt2);
-            output.setCaretPosition(0);
-        }
-        else if (string.trim().equals("γ")){
-            output.setText("≈ "+euler_macheroni);
-            output.setCaretPosition(0);
         }
         else if (string.startsWith("graph")){
             output.setText("Press Enter to Graph");
@@ -248,47 +261,47 @@ public class KeyBoard implements KeyListener{
         }
     }
     
-    private static GraphingCalculator gc;
+//    private static GraphingCalculator gc;
     public boolean specialCalculate(JTextField input, JTextField output){
         String inputStr = input.getText().trim();
         String outputStr = output.getText().trim();
         if (outputStr.equals("Press Enter to Graph") || outputStr.equals("Press Enter to Plot")){
-            if (Main.getCalculator().fields.size() == 1){
-                Main.w.minimizeHeight();
-                Main.w.setSize((int)(p.getScreenWidth()/2), Main.w.getHeight());
-                Main.w.centerAlign();
-                Main.w.setLocation(Main.w.getX(), Main.w.getHeight()/2);
-            }
-            if (gc != null && gc.isVisible()){
-                gc.dispose();
-            }
-            try{
-                String parameter = inputStr.substring(inputStr.indexOf("(")+1, inputStr.lastIndexOf(")"));
-                new Thread(()->{
-                    if (outputStr.equals("Press Enter to Plot")){
-                        int xmax = 25, xmin = -xmax, ymax = xmax, ymin = xmin;
-                        String[] parameters = parameter.split(",");
-                        try{
-                            xmin = Integer.parseInt(parameters[1].replaceAll(" ", ""));
-                            xmax = Integer.parseInt(parameters[2].replaceAll(" ", ""));
-                            ymin = Integer.parseInt(parameters[3].replaceAll(" ", ""));
-                            ymax = Integer.parseInt(parameters[4].replaceAll(" ", ""));
-                        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){}
-                        gc = new GraphingCalculator("Graphing Calculator by Antonio Kim", parameters[0], xmin, xmax, ymin, ymax);
-                        gc.Open();
-                        output.setText("Ploted "+parameters[0]+" from "+xmin+" to "+xmax);
-                    }
-                    else {
-                        gc = new GraphingCalculator("Graphing Calculator by Antonio Kim", parameter.split(","));
-                        gc.Open();
-                        output.setText("Graphed "+parameter);
-                    }
-                }).start();
-                output.setText("Graphing...");
-                return true;
-            }catch(StringIndexOutOfBoundsException e){
-                output.setText("Syntax Error");
-            }
+//            if (Main.getCalculator().fields.size() == 1){
+//                Main.w.minimizeHeight();
+//                Main.w.setSize((int)(p.getScreenWidth()/2), Main.w.getHeight());
+//                Main.w.centerAlign();
+//                Main.w.setLocation(Main.w.getX(), Main.w.getHeight()/2);
+//            }
+//            if (gc != null && gc.isVisible()){
+//                gc.dispose();
+//            }
+//            try{
+//                String parameter = inputStr.substring(inputStr.indexOf("(")+1, inputStr.lastIndexOf(")"));
+//                new Thread(()->{
+//                    if (outputStr.equals("Press Enter to Plot")){
+//                        int xmax = 25, xmin = -xmax, ymax = xmax, ymin = xmin;
+//                        String[] parameters = parameter.split(",");
+//                        try{
+//                            xmin = Integer.parseInt(parameters[1].replaceAll(" ", ""));
+//                            xmax = Integer.parseInt(parameters[2].replaceAll(" ", ""));
+//                            ymin = Integer.parseInt(parameters[3].replaceAll(" ", ""));
+//                            ymax = Integer.parseInt(parameters[4].replaceAll(" ", ""));
+//                        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){}
+//                        gc = new GraphingCalculator("Graphing Calculator by Antonio Kim", parameters[0], xmin, xmax, ymin, ymax);
+//                        gc.Open();
+//                        output.setText("Ploted "+parameters[0]+" from "+xmin+" to "+xmax);
+//                    }
+//                    else {
+//                        gc = new GraphingCalculator("Graphing Calculator by Antonio Kim", parameter.split(","));
+//                        gc.Open();
+//                        output.setText("Graphed "+parameter);
+//                    }
+//                }).start();
+//                output.setText("Graphing...");
+//                return true;
+//            }catch(StringIndexOutOfBoundsException e){
+//                output.setText("Syntax Error");
+//            }
         }
         return false;
     }
@@ -296,55 +309,17 @@ public class KeyBoard implements KeyListener{
     Thread calculating = new Thread();
     public void calculate(JTextField input, JTextField output, String original){
         String function = input.getText().trim();
-        if (function.equalsIgnoreCase("clear")){
-            Engine.getVariables().clear();
-            Engine.getValues().clear();
-            output.setText("cleared");
-        }
-        else if(function.toLowerCase().contains("=")){
-            int index = function.indexOf("=");
+        if(function.toLowerCase().contains("≔")){
+            int index = function.indexOf("≔");
             String variable = function.substring(0, index).trim();
-            double value = Engine.evaluate(function.substring(index+1, function.length()));
-            if (!_Number_.isNumber(value)){
-                output.setText("Math Error");
-            }
-            else if (Engine.getVariables().contains(variable)){
-                Engine.getValues().set(Engine.getVariables().indexOf(variable), value);
-                output.setText("= "+MathRound.roundf(value, 16));
-                for (int a = 0; a<Main.getCalculator().fields.size(); a++){
-                    String text = Main.getCalculator().fields.get(a).getText().replaceAll(" ", "");
-                    if (text.contains(variable) && !original.equals(text)){
-                        index = text.indexOf("=");
-                        if (index == -1){
-                            calculate(Main.getCalculator().fields.get(a), Main.getCalculator().areas.get(a), original);
-                        }
-                        boolean contains = false;
-                        if (!text.contains("random")){
-                            for (int b = 0; b<enter_compute.length; b++){
-                                if (text.contains(enter_compute[b])){
-                                    contains = true;
-                                    break;
-                                }
-                            }
-                        }
-                        else{
-                            value = Engine.evaluate(text.substring(index+1, text.length()));
-                            Engine.getValues().set(Engine.getVariables().indexOf(text.substring(0, index)), value);
-                            Main.getCalculator().areas.get(a).setText("= "+MathRound.roundf(value, 16));
-                        }
-                    }
+            output.setText(Engine.evaluateDF(function));
+            for (int a = 0; a<Main.getCalculator().fields.size(); a++){
+                String text = Main.getCalculator().fields.get(a).getText().replaceAll(" ", "");
+                if ((text.contains("("+variable+")") || text.contains("${"+variable+"}") || 
+                        text.contains("{"+variable+"}") || text.contains("$"+variable) || text.contains(variable+"("))
+                        && !original.equals(text) && (!text.contains("≔") || !function.contains(text.substring(text.indexOf("≔"))))){
+                    calculate(Main.getCalculator().fields.get(a), Main.getCalculator().areas.get(a), original);
                 }
-            }
-            else if ((variable.length() > 1 && Engine.orderIndex(variable) == -1) ||
-                    !variable.toLowerCase().equals(variable) ||
-                    (!Arrays.asList(reserved).contains(variable) &&
-                    (Arrays.asList(greekAlpha).contains(variable) || Arrays.asList(greekCapitalAlpha).contains(variable)))){
-                Engine.getVariables().add(variable);
-                Engine.getValues().add(value);
-                output.setText("= "+MathRound.roundf(value, 16));
-            }
-            else if (!output.getText().endsWith("*")){
-                output.setText(output.getText()+"*");
             }
         }
         else {
@@ -354,18 +329,18 @@ public class KeyBoard implements KeyListener{
             output.setText("computing...");
             calculating = new Thread(() -> {
                 if (function.equals(input.getText().trim())){
-//                    System.out.println(function);
-//                    System.out.println(Engine.fixSyntax(function));
-//                    System.out.println(Engine.toPostfix(function));
+                    //                    System.out.println(function);
+                    //                    System.out.println(Engine.fixSyntax(function));
+                    //                    System.out.println(Engine.toPostfix(function));
                     String evaluated = Engine.evaluateDF(function);
-//                    System.out.println(evaluated);
+                    //                    System.out.println(evaluated);
                     if (function.equals(input.getText().trim())){
                         String answer = "";
                         if (!evaluated.equals("NaN")){
                             answer = evaluated;
                         }
                         else{
-                            String simplified = Simplify.simplify(function);
+                            String simplified = Simplify.simplify(function).infix();
                             if (!simplified.toLowerCase().contains("error")){
                                 answer = "= "+simplified;
                             }

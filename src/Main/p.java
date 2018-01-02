@@ -60,11 +60,11 @@ public class p {
         return border;
     }
     public static Font font(int size){
-        Font font = new Font("Calibri", Font.PLAIN, size);
+        Font font = new Font("Computer Modern", Font.PLAIN, size);
         return font;
     }
     public static Font boldFont(double size){
-        Font font = new Font("Calibri", Font.BOLD, (int)size);
+        Font font = new Font("Computer Modern", Font.BOLD, (int)size);
         return font;
     }
     public static void JMessagePane(String message, String header, int type){
